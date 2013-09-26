@@ -98,6 +98,15 @@ final class DefaultCoercibles
         }
     };
 
+    static final Coercible<Class<?>> CLASS_COERCIBLE = new Coercible<Class<?>>() {
+        public Coercer<Class<?>> accept(final Class<?> clazz) {
+            if (Class.class.equals(clazz)) {
+                return DefaultCoercibles.CLASS_COERCER;
+            }
+            return null;
+        }
+    };
+
     /**
      * A Coercible that accepts any type with a static <code>valueOf(String)</code> method.
      */
@@ -286,6 +295,16 @@ final class DefaultCoercibles
     static final Coercer<URI> URI_COERCER = new Coercer<URI>() {
         public URI coerce(final String value) {
             return value != null ? URI.create(value) : null;
+        }
+    };
+
+    static final Coercer<Class<?>> CLASS_COERCER = new Coercer<Class<?>>() {
+        public Class<?> coerce(final String value) {
+            try {
+                return value != null ? Class.forName(value) : null;
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
     };
 

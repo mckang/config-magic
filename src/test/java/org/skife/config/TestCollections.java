@@ -1,5 +1,6 @@
 package org.skife.config;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -94,6 +95,22 @@ public class TestCollections
     }
 
     @Test
+    public void testGenericClasses()
+    {
+        GenericClassList ec = cof.build(GenericClassList.class);
+
+        Assert.assertEquals(Arrays.asList(String.class, Integer.class), ec.getValue());
+    }
+
+    @Test
+    public void testSimpleClasses()
+    {
+        SimpleClassList ec = cof.build(SimpleClassList.class);
+
+        Assert.assertEquals(Arrays.asList(String.class, Bully.class), ec.getValue());
+    }
+
+    @Test
     public void testDifferentSeparator()
     {
         DifferentSeparator ec = cof.build(DifferentSeparator.class);
@@ -183,5 +200,19 @@ public class TestCollections
         @Separator("\\s*!\\s*")
         @Default("TWO ! ONE")
         public Set<TestEnum> getValue();
+    }
+
+    public static interface GenericClassList {
+
+        @Config("value")
+        @Default("java.lang.String,java.lang.Integer")
+        public List<Class<? extends Serializable>> getValue();
+    }
+
+    public static interface SimpleClassList {
+
+        @Config("value")
+        @Default("java.lang.String,org.skife.config.Bully")
+        public List<Class> getValue();
     }
 }

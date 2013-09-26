@@ -34,6 +34,7 @@ class Bully
         typeCoercibles.add(DefaultCoercibles.FLOAT_COERCIBLE);
         typeCoercibles.add(DefaultCoercibles.DOUBLE_COERCIBLE);
         typeCoercibles.add(DefaultCoercibles.STRING_COERCIBLE);
+        typeCoercibles.add(DefaultCoercibles.CLASS_COERCIBLE);
 
         // Look Brian, now it groks URIs. ;-)
         typeCoercibles.add(DefaultCoercibles.URI_COERCIBLE);
@@ -96,6 +97,9 @@ class Bully
                 if (args != null && args.length == 1) {
                     if (args[0] instanceof Class<?>) {
                         return coerceCollection((Class<?>)rawType, (Class<?>)args[0], value, separator);
+                    }
+                    else if (args[0] instanceof ParameterizedType) {
+                        return coerceCollection((Class<?>)rawType, (Class<?>)((ParameterizedType)args[0]).getRawType(), value, separator);
                     }
                     else if (args[0] instanceof WildcardType) {
                         return coerceClass(type, (WildcardType)args[0], value);
